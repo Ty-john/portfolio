@@ -2,32 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+  --bg: #FBF8F1;
+  --bg-alt: #FBF8F1;
+  --surface: #FFFFFF;
+  --border: rgba(201, 162, 39, 0.28);
+  --text: #0B1F3A;
+  --text-muted: rgba(11, 31, 58, 0.80);
+  --heading: #0B1F3A;
+  --gold-text: #8A6D12;
+  --tag-bg: rgba(11, 31, 58, 0.05);
+  --tag-border: rgba(11, 31, 58, 0.15);
+  --tag-text: #0B1F3A;
+  --contrib-bg: #FBF8F1;
+  --contrib-border: rgba(201, 162, 39, 0.25);
+  --contrib-text: #0B1F3A;
+  --btn-primary-bg: #0B1F3A;
+  --btn-primary-text: #FFFFFF;
+  --btn-outline-border: #C9A227;
+  --btn-outline-text: #0B1F3A;
+  --nav-bg: rgba(251, 248, 241, 0.92);
+  --nav-border: rgba(201, 162, 39, 0.25);
+  --nav-link: rgba(11, 31, 58, 0.80);
+  --nav-link-hover: #9A7B1C;
+  --doodle-stroke: #0B1F3A;
+  --doodle-opacity: 0.11;
+  --card-shadow: 0 4px 20px -2px rgba(11, 31, 58, 0.05), 0 2px 6px -1px rgba(201, 162, 39, 0.08);
+  --card-shadow-hover: 0 14px 34px -4px rgba(201, 162, 39, 0.22), 0 4px 12px -2px rgba(11, 31, 58, 0.06);
+
+  /* Contact and Footer Band Tokens (Original: Deep Navy Band #0B1F3A) */
+  --band-bg: #0B1F3A;
+  --band-surface: #12294A;
+  --band-border: rgba(201, 162, 39, 0.35);
+  --band-heading: #E8D48A;
+  --band-text: rgba(251, 248, 241, 0.85);
+  --band-gold: #E8D48A;
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg: #0B1F3A;
+  --bg-alt: #081629;
+  --surface: #112A4D;
+  --border: rgba(232, 212, 138, 0.18);
+  --text: #B7C0D1;
+  --text-muted: rgba(183, 192, 209, 0.75);
+  --heading: #F6F1E3;
+  --gold-text: #E8D48A;
+  --tag-bg: rgba(232, 212, 138, 0.10);
+  --tag-border: rgba(232, 212, 138, 0.25);
+  --tag-text: #E8D48A;
+  --contrib-bg: #0B1F3A;
+  --contrib-border: rgba(232, 212, 138, 0.18);
+  --contrib-text: #B7C0D1;
+  --btn-primary-bg: linear-gradient(135deg, #E8D48A 0%, #C9A227 50%, #9A7B1C 100%);
+  --btn-primary-text: #0B1F3A;
+  --btn-outline-border: #E8D48A;
+  --btn-outline-text: #F6F1E3;
+  --nav-bg: rgba(11, 31, 58, 0.92);
+  --nav-border: rgba(232, 212, 138, 0.20);
+  --nav-link: rgba(246, 241, 227, 0.85);
+  --nav-link-hover: #E8D48A;
+  --doodle-stroke: #F6F1E3;
+  --doodle-opacity: 0.07;
+  --card-shadow: 0 8px 24px rgba(201, 162, 39, 0.10);
+  --card-shadow-hover: 0 12px 32px rgba(201, 162, 39, 0.18);
+
+  /* Contact and Footer Band Tokens (Dark Mode) */
+  --band-bg: #081629;
+  --band-surface: #112A4D;
+  --band-border: rgba(232, 212, 138, 0.20);
+  --band-heading: #F6F1E3;
+  --band-text: #B7C0D1;
+  --band-gold: #E8D48A;
+}
+
 @layer base {
   html {
-    color-scheme: light;
+    background-color: var(--bg);
+    color: var(--text);
     scroll-behavior: smooth;
     font-family: 'Libre Baskerville', Georgia, serif;
     font-weight: 400;
   }
 
   body {
-    background-color: #FBF8F1;
-    color: #0B1F3A;
+    background-color: var(--bg);
+    color: var(--text);
     overflow-x: hidden;
     font-family: 'Libre Baskerville', Georgia, serif;
     font-weight: 400;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Libre Baskerville', Georgia, serif;
     font-weight: 400;
+    color: var(--heading);
   }
 
-  /* Universal high-contrast focus-visible rings for all interactive links & buttons */
+  /* Universal high-contrast focus-visible rings */
   a:focus-visible,
   button:focus-visible {
     @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-[#FBF8F1];
   }
+
+  html.dark a:focus-visible,
+  html.dark button:focus-visible {
+    @apply ring-[#E8D48A] ring-offset-[#0B1F3A];
+  }
+}
+
+/* Smooth 300ms transition for color & background properties */
+body, header, nav, section, footer, main, div, a, button, p, span, h1, h2, h3, h4, h5, h6, input {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+canvas,
+canvas * {
+  transition: none !important;
+}
+
+/* Doodle Pattern Styling */
+#tech-doodles-pattern g,
+#tech-doodles-group {
+  stroke: var(--doodle-stroke) !important;
+  stroke-opacity: var(--doodle-opacity) !important;
 }
 
 /* Custom scrollbar */
@@ -35,7 +138,7 @@
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FBF8F1;
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
   background: #E8D48A;
@@ -43,6 +146,12 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #C9A227;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #C9A227;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #E8D48A;
 }
 
 /* Metallic Gold Gradients */
@@ -56,34 +165,60 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Card & Glassmorphism helpers tuned for Light Theme */
+/* Card & Glassmorphism helpers */
 .card-gold {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(201, 162, 39, 0.28);
-  box-shadow: 0 4px 20px -2px rgba(11, 31, 58, 0.05), 0 2px 6px -1px rgba(201, 162, 39, 0.08);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-gold:hover {
   border-color: rgba(201, 162, 39, 0.65);
-  box-shadow: 0 14px 34px -4px rgba(201, 162, 39, 0.22), 0 4px 12px -2px rgba(11, 31, 58, 0.06);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--surface);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(201, 162, 39, 0.28);
-  box-shadow: 0 4px 20px -2px rgba(11, 31, 58, 0.05), 0 2px 6px -1px rgba(201, 162, 39, 0.08);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
 }
 
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+/* Header band-dark state: when navbar overlaps Contact or Footer in light mode */
+header[data-band-dark="true"] .nav-logo {
+  color: #FBF8F1 !important;
 }
-
-.glass-panel-hover:hover {
-  border-color: rgba(201, 162, 39, 0.65);
-  box-shadow: 0 14px 34px -4px rgba(201, 162, 39, 0.22), 0 4px 12px -2px rgba(11, 31, 58, 0.06);
+header[data-band-dark="true"] .nav-logo:hover {
+  color: #E8D48A !important;
+}
+header[data-band-dark="true"] .nav-link {
+  color: rgba(251, 248, 241, 0.85) !important;
+}
+header[data-band-dark="true"] .nav-link:hover {
+  color: #E8D48A !important;
+}
+header[data-band-dark="true"] .header-resume-btn {
+  border-color: #E8D48A !important;
+  color: #E8D48A !important;
+}
+header[data-band-dark="true"] .header-resume-btn:hover {
+  background-color: #E8D48A !important;
+  color: #0B1F3A !important;
+}
+header[data-band-dark="true"] .header-mobile-btn {
+  background-color: #12294A !important;
+  border-color: rgba(201, 162, 39, 0.30) !important;
+  color: #FBF8F1 !important;
+}
+header[data-band-dark="true"] .theme-toggle-btn {
+  background-color: #112A4D !important;
+  border-color: rgba(232, 212, 138, 0.25) !important;
+  color: #E8D48A !important;
+}
+header[data-band-dark="true"] .theme-toggle-btn svg {
+  color: #E8D48A !important;
 }
 
 /* Reduced motion support */

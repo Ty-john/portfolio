@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ExternalLink, Image as ImageIcon, Lock, Users } from 'lucide-react';
 import { isRealUrl, isRealText } from '../data/portfolioData';
 
-// Neutral screenshot slot supporting an optional image path or fallback placeholder
 function ProjectScreenshot({ image, title }) {
   if (image && typeof image === 'string' && image.trim() !== '') {
     return (
@@ -89,7 +88,7 @@ export default function ProjectCard({ project, index }) {
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         transition: 'transform 0.15s ease-out',
       }}
-      className="relative rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold flex flex-col overflow-hidden group h-full transition-all duration-300"
+      className="relative rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold flex flex-col overflow-hidden group h-full transition-all duration-300 dark:bg-[var(--surface)] dark:border-[var(--border)]"
     >
       {/* Metallic Gold Top Accent Stripe */}
       <div className="w-full h-1.5 bg-gradient-to-r from-[#E8D48A] via-[#C9A227] to-[#9A7B1C]" />
@@ -102,9 +101,9 @@ export default function ProjectCard({ project, index }) {
         }}
       />
 
-      {/* Top Image / Screenshot Slot - Only rendered if a real image is provided */}
+      {/* Top Image / Screenshot Slot */}
       {hasImage && (
-        <div className="relative w-full h-48 sm:h-52 bg-[#0B1F3A] border-b border-[#C9A227]/25 overflow-hidden">
+        <div className="relative w-full h-48 sm:h-52 bg-[#0B1F3A] border-b border-[#C9A227]/25 dark:border-[var(--border)] overflow-hidden">
           {/* Mock Window Header */}
           <div className="absolute top-0 left-0 right-0 h-6 bg-[#071527]/95 px-3 flex items-center justify-between border-b border-[#C9A227]/20 z-10">
             <div className="flex items-center space-x-1.5">
@@ -131,58 +130,58 @@ export default function ProjectCard({ project, index }) {
           {/* Header Row: Category / Navy Team Badge & Large Gold Index */}
           <div className="flex items-center justify-between gap-2 mb-2">
             {hasTeamNote ? (
-              <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full bg-navy text-white font-normal shadow-sm">
+              <span className="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full bg-navy text-white font-normal shadow-sm dark:bg-[#0B1F3A] dark:border dark:border-[var(--border)] dark:text-[#F6F1E3]">
                 <Users className="w-3 h-3 text-gold-light" />
                 <span>{project.teamNote}</span>
               </span>
             ) : project.category ? (
-              <span className="text-xs uppercase tracking-wider text-[#8A6D12] font-normal">
+              <span className="text-xs uppercase tracking-wider text-[#8A6D12] dark:text-[var(--gold-text)] font-normal">
                 {project.category}
               </span>
             ) : (
               <span />
             )}
-            <span className="text-xs font-normal text-gold">
+            <span className="text-xs font-normal text-gold dark:text-[var(--gold-text)]">
               0{index + 1}
             </span>
           </div>
 
           {/* Project Title */}
-          <h3 className="text-lg sm:text-xl font-normal text-navy group-hover:text-gold-deep transition-colors leading-snug">
+          <h3 className="text-lg sm:text-xl font-normal text-navy dark:text-[var(--heading)] group-hover:text-gold-deep dark:group-hover:text-[var(--gold-text)] transition-colors leading-snug">
             {project.title}
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-navy/85 mt-2.5 leading-relaxed font-normal">
+          <p className="text-sm text-navy/85 dark:text-[var(--text-muted)] mt-2.5 leading-relaxed font-normal">
             {project.description}
           </p>
 
-          {/* Optional Contribution Line (Hidden when empty or bracketed) */}
+          {/* Optional Contribution Line */}
           {hasContribution && (
-            <div className="mt-3.5 p-3 rounded-lg bg-[#FBF8F1] border border-[#C9A227]/25 text-xs text-navy leading-relaxed font-normal">
-              <span className="text-[#8A6D12] italic block mb-0.5 font-normal">My contribution:</span>
+            <div className="mt-3.5 p-3 rounded-lg bg-[#FBF8F1] border border-[#C9A227]/25 text-xs text-navy leading-relaxed font-normal dark:bg-[var(--contrib-bg)] dark:border-[var(--contrib-border)] dark:text-[var(--contrib-text)]">
+              <span className="text-[#8A6D12] italic block mb-0.5 font-normal dark:text-[var(--gold-text)]">My contribution:</span>
               <span>{project.contribution}</span>
             </div>
           )}
         </div>
 
         <div>
-          {/* Tech Stack Chips (Navy Chips) */}
-          <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#C9A227]/20">
+          {/* Tech Stack Chips */}
+          <div className="flex flex-wrap gap-1.5 pt-3 border-t border-[#C9A227]/20 dark:border-[var(--border)]">
             {project.techStack.map((tech) => (
               <span
                 key={tech}
-                className="text-[11px] font-normal px-2.5 py-1 rounded-md bg-[#0B1F3A]/5 border border-[#0B1F3A]/15 text-[#0B1F3A] group-hover:border-gold/40 transition-colors"
+                className="text-[11px] font-normal px-2.5 py-1 rounded-md bg-[#0B1F3A]/5 border border-[#0B1F3A]/15 text-[#0B1F3A] group-hover:border-gold/40 transition-colors dark:bg-[var(--tag-bg)] dark:border-[var(--tag-border)] dark:text-[var(--tag-text)]"
               >
                 {tech}
               </span>
             ))}
           </div>
 
-          {/* Action Link Footer: Primary Gold fill with Navy text, Secondary Navy outline */}
+          {/* Action Link Footer: Outline 2px navy in light, 1.5px gold in dark; Primary gold gradient in both */}
           {project.isPrivate ? (
-            <div className="mt-5 pt-3 flex items-center gap-1.5 text-xs text-navy/60 font-normal">
-              <Lock className="w-3.5 h-3.5 text-navy/60" />
+            <div className="mt-5 pt-3 flex items-center gap-1.5 text-xs text-navy/60 dark:text-[var(--text-muted)] font-normal">
+              <Lock className="w-3.5 h-3.5 text-navy/60 dark:text-[var(--text-muted)]" />
               <span>Private repository</span>
             </div>
           ) : (hasRealLink || hasRealLiveLink) ? (
@@ -192,7 +191,7 @@ export default function ProjectCard({ project, index }) {
                   href={project.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-normal uppercase tracking-wider rounded-lg border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all duration-200"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-normal uppercase tracking-wider rounded-lg border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all duration-200 dark:border-[1.5px] dark:border-[var(--btn-outline-border)] dark:text-[var(--btn-outline-text)] dark:hover:bg-gold/15"
                 >
                   <span>Code</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -211,7 +210,7 @@ export default function ProjectCard({ project, index }) {
               )}
             </div>
           ) : (
-            <div className="mt-5 pt-3 flex items-center justify-between text-xs text-navy/60 font-normal">
+            <div className="mt-5 pt-3 flex items-center justify-between text-xs text-navy/60 dark:text-[var(--text-muted)] font-normal">
               <span className="italic">Repository / Demo upon request</span>
               <span className="w-1.5 h-1.5 rounded-full bg-gold" />
             </div>

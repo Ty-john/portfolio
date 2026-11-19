@@ -8,25 +8,31 @@ export default function Footer() {
   };
 
   return (
-    <footer data-nav-theme="dark" className="py-12 px-4 sm:px-6 lg:px-8 border-t border-[#C9A227]/25 bg-[#0B1F3A] text-[#FBF8F1] text-xs relative z-10">
+    <footer
+      data-nav-band="true"
+      className="py-12 px-4 sm:px-6 lg:px-8 border-t border-[var(--band-border)] bg-[var(--band-bg)] text-[var(--band-text)] text-xs relative z-10 transition-colors duration-300"
+    >
+      {/* 1px Gold Gradient Hairline along top edge */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A227]/60 dark:via-[#E8D48A]/50 to-transparent pointer-events-none" />
+
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
         {/* Brand & Copyright */}
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-          <span className="font-normal text-[#E8D48A] text-sm">
+          <span className="font-normal text-[var(--band-gold)] text-sm">
             {personalInfo.name}
           </span>
           <span className="hidden sm:inline text-gold">•</span>
-          <span className="font-normal text-[#FBF8F1]/70">© {new Date().getFullYear()} All rights reserved.</span>
+          <span className="font-normal text-[var(--band-text)]">© {new Date().getFullYear()} All rights reserved.</span>
         </div>
 
         {/* Built With Notice & Scroll to top */}
         <div className="flex items-center gap-6">
-          <span className="text-[#E8D48A] font-normal text-[11px]">
+          <span className="text-[var(--band-gold)] font-normal text-[11px]">
             Vite + React + Three.js
           </span>
           <button
             onClick={scrollToTop}
-            className="p-2 rounded-lg bg-[#12294A] border border-[#C9A227]/40 hover:border-gold text-[#E8D48A] hover:bg-gold hover:text-[#0B1F3A] transition-all flex items-center gap-1.5 shadow-sm"
+            className="p-2 rounded-lg bg-[var(--band-surface)] border border-[var(--band-border)] hover:border-gold text-[var(--band-gold)] hover:bg-gold hover:text-[#0B1F3A] transition-all flex items-center gap-1.5 shadow-sm"
             title="Scroll to top"
           >
             <span className="text-[11px] font-normal tracking-wider">TOP</span>
@@ -37,4 +43,3 @@ export default function Footer() {
     </footer>
   );
 }
-

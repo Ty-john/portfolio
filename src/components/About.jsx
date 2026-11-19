@@ -17,10 +17,6 @@ const iconMap = {
   Cpu: Cpu,
 };
 
-/**
- * Parses statement text, turning words enclosed in *asterisks* into gold italic typography.
- * Uses high-contrast gold gradient starting from #C9A227 down to #9A7B1C (never lighter than #C9A227).
- */
 function StatementText({ text }) {
   if (!text) return null;
 
@@ -33,7 +29,7 @@ function StatementText({ text }) {
           return (
             <span
               key={i}
-              className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#C9A227] to-[#9A7B1C]"
+              className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#C9A227] to-[#9A7B1C] dark:from-[#E8D48A] dark:to-[#C9A227]"
             >
               {part.slice(1, -1)}
             </span>
@@ -72,7 +68,6 @@ export default function About() {
   const statement1 = aboutStatements?.[0];
   const statement2 = aboutStatements?.[1];
 
-  // Derive polaroids with real images only, dynamically reading title and subtitle from certificates data
   const resolvedFrames = (frames || [])
     .filter((f) => isRealText(f?.image))
     .map((frame) => {
@@ -83,29 +78,22 @@ export default function About() {
           (frame.certId && c.id === frame.certId)
       );
 
-      if (cert) {
-        return {
-          ...frame,
-          title: cert.title,
-          caption: 'DataCamp',
-        };
-      }
-
       return {
         ...frame,
+        title: cert ? cert.title : frame.title,
         caption: 'DataCamp',
       };
     });
 
   return (
-    <section id="about" className="relative py-28 px-4 sm:px-6 lg:px-8 border-t border-[#C9A227]/25 bg-transparent overflow-hidden">
+    <section id="about" className="relative py-28 px-4 sm:px-6 lg:px-8 border-t border-[#C9A227]/25 dark:border-[var(--border)] bg-transparent overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         {/* Section Header */}
         <div className="flex flex-col items-start">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-gold/15 border border-gold/40 text-[#8A6D12] text-xs font-normal uppercase tracking-[0.2em] mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-gold/15 border border-gold/40 text-[#8A6D12] dark:bg-gold/15 dark:text-[var(--gold-text)] dark:border-[var(--border)] text-xs font-normal uppercase tracking-[0.2em] mb-3">
             <span>01 // Background</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-navy tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[var(--heading)] tracking-tight">
             About My Work
           </h2>
         </div>
@@ -114,7 +102,7 @@ export default function About() {
         {statement1 && (
           <div ref={statementRef1} className="relative py-2 sm:py-3 my-0">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 items-center">
-              {/* Outer Left Gutter (Columns 1-2): Desktop Parallax Frame 1 (aligned closer to statement) */}
+              {/* Outer Left Gutter: Desktop Parallax Frame 1 */}
               <div className="hidden lg:flex lg:col-span-2 justify-end pr-1 xl:pr-2">
                 {resolvedFrames[0] && (
                   <PolaroidFrame
@@ -128,7 +116,7 @@ export default function About() {
                 )}
               </div>
 
-              {/* Center Statement Text (Columns 3-10, max-width ~900px, 2-3 lines) */}
+              {/* Center Statement Text */}
               <div className="col-span-1 lg:col-span-8 max-w-[900px] mx-auto text-center px-2 sm:px-4">
                 <motion.div
                   initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 25 }}
@@ -136,14 +124,14 @@ export default function About() {
                   viewport={{ once: true, margin: '-50px' }}
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <p className="font-serif font-normal text-navy text-xl sm:text-2xl lg:text-[1.75rem] xl:text-[2rem] leading-[1.42] tracking-tight">
+                  <p className="font-serif font-normal text-[var(--heading)] text-xl sm:text-2xl lg:text-[1.75rem] xl:text-[2rem] leading-[1.42] tracking-tight">
                     <StatementText text={statement1.text} />
                   </p>
                 </motion.div>
               </div>
 
-              {/* Outer Right Gutter (Columns 11-12): Desktop Parallax Frame 2 (aligned closer to statement) */}
-              <div className="hidden lg:flex lg:col-span-2 justify-start pl-1 xl:pl-2">
+              {/* Outer Right Gutter: Desktop Parallax Frame 2 */}
+              <div className="hidden lg:flex lg:col-span-2 justify-start pl-1 xl:pr-2">
                 {resolvedFrames[1] && (
                   <PolaroidFrame
                     frame={resolvedFrames[1]}
@@ -157,7 +145,7 @@ export default function About() {
               </div>
             </div>
 
-            {/* Below 1024px: Single column, smaller polaroid stacked cleanly below text, aligned left (reduced gap) */}
+            {/* Below 1024px: Single column, smaller polaroid stacked cleanly below text */}
             {resolvedFrames[0] && (
               <div className="block lg:hidden mt-4 ml-4 sm:ml-8 w-36 sm:w-40 relative z-10">
                 <PolaroidFrame
@@ -182,40 +170,40 @@ export default function About() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 space-y-6"
           >
-            <div className="p-8 rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card relative overflow-hidden group">
+            <div className="p-8 rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold relative overflow-hidden group dark:bg-[var(--surface)] dark:border-[var(--border)]">
               {/* Metallic Gold Top Accent Stripe */}
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#E8D48A] via-[#C9A227] to-[#9A7B1C]" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E8D48A] via-[#C9A227] to-[#9A7B1C]" />
 
               <div className="flex items-center gap-3 text-gold-deep mb-4 pt-1">
-                <GraduationCap className="w-6 h-6 text-gold" />
-                <span className="text-xs uppercase tracking-widest font-normal text-[#8A6D12]">
+                <GraduationCap className="w-6 h-6 text-[var(--gold-text)]" />
+                <span className="text-xs uppercase tracking-widest font-normal text-[var(--gold-text)]">
                   Education & Focus
                 </span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-normal text-navy mb-4">
+              <h3 className="text-xl sm:text-2xl font-normal text-[var(--heading)] mb-4">
                 Fourth-Year BSIT Student & Technical Builder
               </h3>
 
-              <p className="text-navy/85 leading-relaxed text-sm sm:text-base font-normal">
+              <p className="text-[var(--text-muted)] leading-relaxed text-sm sm:text-base font-normal">
                 {personalInfo.bio}
               </p>
 
-              <div className="mt-8 pt-6 border-t border-[#C9A227]/20 grid grid-cols-2 gap-4">
+              <div className="mt-8 pt-6 border-t border-[#C9A227]/20 dark:border-[var(--border)] grid grid-cols-2 gap-4">
                 <div>
-                  <span className="text-xs text-navy/60 uppercase tracking-wider block font-normal">
+                  <span className="text-xs text-navy/60 dark:text-[var(--text-muted)] uppercase tracking-wider block font-normal">
                     Discipline
                   </span>
-                  <span className="text-sm font-normal text-navy mt-1 block">
+                  <span className="text-sm font-normal text-[var(--heading)] mt-1 block">
                     Full-Stack & Systems
                   </span>
                 </div>
                 <div>
-                  <span className="text-xs text-navy/60 uppercase tracking-wider block font-normal">
+                  <span className="text-xs text-navy/60 dark:text-[var(--text-muted)] uppercase tracking-wider block font-normal">
                     Based In
                   </span>
-                  <span className="text-sm font-normal text-navy mt-1 flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-gold" />
+                  <span className="text-sm font-normal text-[var(--heading)] mt-1 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-[var(--gold-text)]" />
                     Metro Manila, Philippines
                   </span>
                 </div>
@@ -237,7 +225,7 @@ export default function About() {
                 <motion.div
                   key={pillar.title}
                   variants={itemVariants}
-                  className="p-6 rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold transition-all duration-300 flex flex-col sm:flex-row items-start gap-5 relative group overflow-hidden"
+                  className="p-6 rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold transition-all duration-300 flex flex-col sm:flex-row items-start gap-5 relative group overflow-hidden dark:bg-[var(--surface)] dark:border-[var(--border)]"
                 >
                   {/* Top Gold Accent Bar */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E8D48A] via-[#C9A227] to-[#9A7B1C]" />
@@ -248,21 +236,21 @@ export default function About() {
                   </div>
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-normal text-gold">
+                      <span className="text-xs font-normal text-[var(--gold-text)]">
                         0{idx + 1}.
                       </span>
-                      <h4 className="text-lg font-normal text-navy">
+                      <h4 className="text-lg font-normal text-[var(--heading)]">
                         {pillar.title}
                       </h4>
                     </div>
-                    <p className="text-sm text-navy/80 leading-relaxed font-normal">
+                    <p className="text-sm text-[var(--text-muted)] leading-relaxed font-normal">
                       {pillar.description}
                     </p>
                     <div className="flex flex-wrap gap-2 pt-2">
                       {pillar.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="text-[11px] font-normal px-2.5 py-0.5 rounded-md bg-[#0B1F3A]/5 border border-[#0B1F3A]/15 text-[#0B1F3A]"
+                          className="text-[11px] font-normal px-2.5 py-0.5 rounded-md bg-[#0B1F3A]/5 border border-[#0B1F3A]/15 text-[#0B1F3A] dark:bg-[var(--tag-bg)] dark:border-[var(--tag-border)] dark:text-[var(--tag-text)]"
                         >
                           {skill}
                         </span>
@@ -279,7 +267,7 @@ export default function About() {
         {statement2 && (
           <div ref={statementRef2} className="relative py-2 sm:py-3 my-0">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-4 items-center">
-              {/* Outer Left Gutter (Columns 1-2): Desktop Parallax Frame 3 (closer to statement) */}
+              {/* Outer Left Gutter: Desktop Parallax Frame 3 */}
               <div className="hidden lg:flex lg:col-span-2 justify-end pr-1 xl:pr-2">
                 {resolvedFrames[2] && (
                   <PolaroidFrame
@@ -293,7 +281,7 @@ export default function About() {
                 )}
               </div>
 
-              {/* Center Statement Text (Columns 3-10, max-width ~900px, 2-3 lines) */}
+              {/* Center Statement Text */}
               <div className="col-span-1 lg:col-span-8 max-w-[900px] mx-auto text-center px-2 sm:px-4">
                 <motion.div
                   initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 25 }}
@@ -301,14 +289,14 @@ export default function About() {
                   viewport={{ once: true, margin: '-50px' }}
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <p className="font-serif font-normal text-navy text-xl sm:text-2xl lg:text-[1.75rem] xl:text-[2rem] leading-[1.42] tracking-tight">
+                  <p className="font-serif font-normal text-[var(--heading)] text-xl sm:text-2xl lg:text-[1.75rem] xl:text-[2rem] leading-[1.42] tracking-tight">
                     <StatementText text={statement2.text} />
                   </p>
                 </motion.div>
               </div>
 
-              {/* Outer Right Gutter (Columns 11-12): Desktop Parallax Frame 4 (if available) */}
-              <div className="hidden lg:flex lg:col-span-2 justify-start pl-1 xl:pl-2">
+              {/* Outer Right Gutter: Desktop Parallax Frame 4 */}
+              <div className="hidden lg:flex lg:col-span-2 justify-start pl-1 xl:pr-2">
                 {resolvedFrames[3] && (
                   <PolaroidFrame
                     frame={resolvedFrames[3]}
@@ -322,7 +310,7 @@ export default function About() {
               </div>
             </div>
 
-            {/* Below 1024px: Single column, smaller polaroid stacked cleanly below text, aligned right (reduced gap) */}
+            {/* Below 1024px: Single column, smaller polaroid stacked cleanly below text */}
             {resolvedFrames[2] && (
               <div className="block lg:hidden mt-4 ml-auto mr-4 sm:mr-8 w-36 sm:w-40 relative z-10">
                 <PolaroidFrame

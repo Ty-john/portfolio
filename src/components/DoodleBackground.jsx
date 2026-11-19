@@ -2,14 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * DoodleBackground: Fixed background with an organic, varied doodle pattern.
+ * Transparent container so html/body background provides the canvas.
  * Uses /bg/doodles.png if present; otherwise renders an inline SVG pattern
- * of line-art tech icons in navy at 10% opacity on the ivory canvas.
- * Features:
- * - 10% opacity for clear editorial presence without compromising text contrast
- * - Two distinct icon sizes (regular ~1.05x and small accent ~0.72x)
- * - Randomized rotation angles (-24° to +25°)
- * - Organic, non-grid distribution across a 480x480 repeating tile
- * - Fully iOS-safe via fixed container positioning (no background-attachment: fixed)
+ * of line-art tech icons with stroke var(--doodle-stroke) and opacity var(--doodle-opacity).
  */
 export default function DoodleBackground() {
   const [hasPng, setHasPng] = useState(false);
@@ -24,7 +19,7 @@ export default function DoodleBackground() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#FBF8F1]"
+      className="fixed inset-0 pointer-events-none overflow-hidden z-0 bg-[var(--bg)] transition-colors duration-300"
     >
       {hasPng ? (
         <div
@@ -49,9 +44,13 @@ export default function DoodleBackground() {
               height="480"
               patternUnits="userSpaceOnUse"
             >
-              {/* Group styling: Navy (#0B1F3A) with 10% stroke opacity */}
               <g
-                stroke="#0B1F3A"
+                id="tech-doodles-group"
+                style={{
+                  stroke: 'var(--doodle-stroke)',
+                  strokeOpacity: 'var(--doodle-opacity)',
+                }}
+                stroke="var(--doodle-stroke)"
                 strokeOpacity="0.10"
                 strokeWidth="1.4"
                 strokeLinecap="round"

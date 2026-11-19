@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Code2, Database, Workflow, Video, CheckCircle } from 'lucide-react';
+import { Code2, Database, Workflow, Video } from 'lucide-react';
 import { skillCategories } from '../data/portfolioData';
 
 const iconMap = {
@@ -33,17 +33,17 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className="relative py-28 px-4 sm:px-6 lg:px-8 border-t border-[#C9A227]/25 bg-transparent">
+    <section id="skills" className="relative py-28 px-4 sm:px-6 lg:px-8 border-t border-[#C9A227]/25 dark:border-[var(--border)] bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col items-start mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-gold/15 border border-gold/40 text-[#8A6D12] text-xs font-normal uppercase tracking-[0.2em] mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-gold/15 border border-gold/40 text-[#8A6D12] dark:bg-gold/15 dark:text-[var(--gold-text)] dark:border-[var(--border)] text-xs font-normal uppercase tracking-[0.2em] mb-3">
             <span>03 // Stack</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-navy tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[var(--heading)] tracking-tight">
             Tools I've Used
           </h2>
-          <p className="text-navy/80 text-sm sm:text-base max-w-2xl mt-3 font-normal">
+          <p className="text-navy/80 dark:text-[var(--text-muted)] text-sm sm:text-base max-w-2xl mt-3 font-normal">
             Tools I've used in coursework and team projects, mostly with AI assistance.
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function Skills() {
               <motion.div
                 key={cat.title}
                 variants={itemVariants}
-                className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold flex flex-col justify-between group relative overflow-hidden transition-all duration-300"
+                className="p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold flex flex-col justify-between group relative overflow-hidden transition-all duration-300 dark:bg-[var(--surface)] dark:border-[var(--border)]"
               >
                 {/* Metallic Gold Top Accent Line */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E8D48A] via-[#C9A227] to-[#9A7B1C]" />
@@ -72,12 +72,12 @@ export default function Skills() {
                     <div className="p-3 rounded-xl bg-gradient-to-br from-[#E8D48A] via-[#C9A227] to-[#9A7B1C] text-[#0B1F3A] shadow-sm group-hover:scale-105 transition-transform">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-normal text-gold">
+                    <span className="text-xs font-normal text-gold dark:text-[var(--gold-text)]">
                       0{idx + 1}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-normal text-navy mb-4">
+                  <h3 className="text-lg font-normal text-navy dark:text-[var(--heading)] mb-4">
                     {cat.title}
                   </h3>
 
@@ -85,7 +85,7 @@ export default function Skills() {
                     {cat.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="text-xs font-normal px-2.5 py-1 rounded-md bg-[#0B1F3A]/5 border border-[#0B1F3A]/15 text-[#0B1F3A] group-hover:border-gold/40 group-hover:text-navy transition-all"
+                        className="text-xs font-normal px-2.5 py-1 rounded-md bg-[#0B1F3A]/5 border border-[#0B1F3A]/15 text-[#0B1F3A] group-hover:border-gold/40 group-hover:text-navy transition-all dark:bg-[var(--tag-bg)] dark:border-[var(--tag-border)] dark:text-[var(--tag-text)]"
                       >
                         {skill}
                       </span>
@@ -100,4 +100,3 @@ export default function Skills() {
     </section>
   );
 }
-

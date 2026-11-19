@@ -14,8 +14,27 @@
     <meta property="og:description" content="Bridging practical code, database architectures, and pragmatic workflow automations." />
     <meta property="twitter:card" content="summary_large_image" />
 
-    <!-- Theme Color: Warm Off-White / Gold Base -->
-    <meta name="theme-color" content="#FBF8F1" />
+    <!-- Theme Color: Dynamically updated via ThemeContext -->
+    <meta name="theme-color" id="meta-theme-color" content="#FBF8F1" />
+
+    <!-- Theme initialization script to prevent flash of incorrect theme before first paint -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (saved === 'dark' || (!saved && prefersDark)) {
+            document.documentElement.classList.add('dark');
+            var meta = document.getElementById('meta-theme-color');
+            if (meta) meta.setAttribute('content', '#0B1F3A');
+          } else {
+            document.documentElement.classList.remove('dark');
+            var metaLight = document.getElementById('meta-theme-color');
+            if (metaLight) metaLight.setAttribute('content', '#FBF8F1');
+          }
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -25,9 +44,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-[#FBF8F1] text-[#0B1F3A] font-serif font-normal antialiased selection:bg-[#C9A227]/25 selection:text-[#0B1F3A]">
+  <body class="bg-[var(--bg)] text-[var(--text)] font-serif font-normal antialiased selection:bg-[#C9A227]/25 selection:text-[#0B1F3A]">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-

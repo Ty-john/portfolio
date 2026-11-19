@@ -6,15 +6,13 @@ import { isRealText } from '../data/portfolioData';
 /**
  * PolaroidFrame: An editorial polaroid frame with thicker bottom border,
  * slight initial rotation, hard offset shadow, optional gold tape strip on top,
- * and neutral placeholder. Driven by framer-motion useScroll & useTransform.
- * Uses transforms only with will-change: transform.
- * Under prefers-reduced-motion, it stays completely static.
+ * and neutral placeholder. Stays light (paper look) in both themes with darker shadow in dark mode.
  */
 export default function PolaroidFrame({
   frame,
   targetRef,
-  travel = [-40, 60], // Roughly 60-140px vertical travel
-  rotateDelta = 2.2, // 1-3 degrees rotational drift
+  travel = [-40, 60],
+  rotateDelta = 2.2,
   initialRotate = 0,
   showTape = true,
   className = '',
@@ -25,16 +23,12 @@ export default function PolaroidFrame({
   const baseRotation =
     typeof frame?.rotation === 'number' ? frame.rotation : initialRotate;
 
-  // Track scroll position relative to the statement block / section container
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ['start end', 'end start'],
   });
 
-  // Vertical drift transform
   const yTransform = useTransform(scrollYProgress, [0, 1], travel);
-
-  // Subtle rotational drift
   const rTransform = useTransform(
     scrollYProgress,
     [0, 1],
@@ -50,7 +44,7 @@ export default function PolaroidFrame({
         rotate: shouldReduceMotion ? baseRotation : rTransform,
         willChange: 'transform',
       }}
-      className={`relative bg-white p-3 pb-8 sm:p-3.5 sm:pb-9 rounded-sm border border-[#C9A227]/25 shadow-[6px_8px_0px_rgba(11,31,58,0.13)] select-none ${className}`}
+      className={`relative bg-white p-3 pb-8 sm:p-3.5 sm:pb-9 rounded-sm border border-[#C9A227]/25 shadow-[6px_8px_0px_rgba(11,31,58,0.13)] dark:shadow-[6px_8px_0px_rgba(0,0,0,0.45)] select-none ${className}`}
     >
       {/* Optional Gold Tape Strip on top */}
       {(showTape || frame?.tape) && (
@@ -71,7 +65,6 @@ export default function PolaroidFrame({
             className="w-full h-full object-cover object-top transition-transform duration-300 hover:scale-105"
           />
         ) : (
-          /* Neutral Placeholder if no image is set */
           <div className="w-full h-full bg-gradient-to-br from-[#FBF8F1] via-[#F4EBCF]/60 to-[#FFFFFF] flex flex-col items-center justify-center p-3 text-center gap-1.5">
             <div className="w-8 h-8 rounded-lg bg-gold/15 border border-gold/30 flex items-center justify-center text-[#8A6D12]">
               <Camera className="w-4 h-4 text-[#8A6D12]" />
@@ -101,4 +94,3 @@ export default function PolaroidFrame({
     </motion.div>
   );
 }
-

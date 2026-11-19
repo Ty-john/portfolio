@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Download, ArrowUpRight } from 'lucide-react';
 import { personalInfo, certificates } from '../data/portfolioData';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from './ThemeToggle';
 
 const navItems = [
   { label: 'About', href: '#about' },
@@ -15,73 +17,67 @@ const navItems = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-
+  const { isDark } = useTheme();
   const headerRef = useRef(null);
-  const isDarkRef = useRef(false);
-  const scrolledRef = useRef(false);
 
   useEffect(() => {
-    let rafId = null;
+    const header = headerRef.current;
+    if (!header) return;
 
-    const checkNavTheme = () => {
-      const navHeight = headerRef.current ? headerRef.current.offsetHeight : 64;
-      const navCenter = navHeight / 2;
-
+    // 1. Scrolled state toggled directly on DOM via ref (zero React re-renders)
+    const onScroll = () => {
       const isScrolled = window.scrollY > 20;
-      if (isScrolled !== scrolledRef.current) {
-        scrolledRef.current = isScrolled;
-        setScrolled(isScrolled);
+      if (header.dataset.scrolled !== String(isScrolled)) {
+        header.dataset.scrolled = String(isScrolled);
       }
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-      const darkSections = document.querySelectorAll('[data-nav-theme="dark"]');
-      let overlapsDark = false;
+    // 2. IntersectionObserver detecting when Contact or Footer bands overlap the navbar
+    const bandElements = document.querySelectorAll('[data-nav-band="true"]');
+    let observer = null;
 
-      for (let i = 0; i < darkSections.length; i++) {
-        const rect = darkSections[i].getBoundingClientRect();
-        if (rect.top <= navCenter && rect.bottom >= navCenter) {
-          overlapsDark = true;
-          break;
+    if (bandElements.length > 0 && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        () => {
+          let overlaps = false;
+          for (let i = 0; i < bandElements.length; i++) {
+            const rect = bandElements[i].getBoundingClientRect();
+            if (rect.top <= 64 && rect.bottom >= 0) {
+              overlaps = true;
+              break;
+            }
+          }
+          if (overlaps) {
+            header.setAttribute('data-band-dark', 'true');
+          } else {
+            header.removeAttribute('data-band-dark');
+          }
+        },
+        {
+          rootMargin: '0px 0px -90% 0px',
+          threshold: [0, 0.05, 0.1, 0.2, 0.5, 1.0],
         }
-      }
+      );
 
-      if (overlapsDark !== isDarkRef.current) {
-        isDarkRef.current = overlapsDark;
-        setIsDarkTheme(overlapsDark);
-      }
-    };
-
-    const onScrollOrResize = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        checkNavTheme();
-        rafId = null;
-      });
-    };
-
-    // Initial check on mount
-    checkNavTheme();
-
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize, { passive: true });
+      bandElements.forEach((el) => observer.observe(el));
+    }
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
+      window.removeEventListener('scroll', onScroll);
+      if (observer) observer.disconnect();
     };
   }, []);
 
   return (
     <header
       ref={headerRef}
+      data-scrolled="false"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isDarkTheme
-          ? 'bg-[rgba(11,31,58,0.92)] backdrop-blur-md border-b border-[#C9A227]/20 shadow-md py-3.5'
-          : scrolled
-          ? 'bg-[#FBF8F1]/92 backdrop-blur-md border-b border-[#C9A227]/25 shadow-sm py-3.5'
-          : 'bg-transparent py-5'
+        isDark
+          ? 'data-[scrolled=true]:bg-[rgba(11,31,58,0.92)] data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:border-b data-[scrolled=true]:border-[rgba(232,212,138,0.20)] data-[scrolled=true]:shadow-md data-[scrolled=true]:py-3.5 py-5 bg-transparent'
+          : 'data-[band-dark=true]:bg-[rgba(11,31,58,0.92)] data-[band-dark=true]:backdrop-blur-md data-[band-dark=true]:border-b data-[band-dark=true]:border-[#C9A227]/20 data-[band-dark=true]:shadow-md data-[band-dark=true]:py-3.5 data-[scrolled=true]:bg-[#FBF8F1]/92 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:border-b data-[scrolled=true]:border-[#C9A227]/25 data-[scrolled=true]:shadow-sm data-[scrolled=true]:py-3.5 py-5 bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,9 +85,9 @@ export default function Navbar() {
           {/* Logo / Monogram */}
           <a
             href="#"
-            className={`group flex items-center space-x-1.5 text-xl font-normal tracking-tight transition-colors duration-300 ${
-              isDarkTheme
-                ? 'text-[#FBF8F1] hover:text-[#E8D48A]'
+            className={`nav-logo group flex items-center space-x-1.5 text-xl font-normal tracking-tight transition-colors duration-300 ${
+              isDark
+                ? 'text-[#F6F1E3] hover:text-[#E8D48A]'
                 : 'text-navy hover:text-gold-deep'
             }`}
           >
@@ -105,9 +101,9 @@ export default function Navbar() {
               <a
                 key={item.label}
                 href={item.href}
-                className={`text-sm font-normal tracking-wide transition-colors duration-300 ${
-                  isDarkTheme
-                    ? 'text-[#FBF8F1]/85 hover:text-[#E8D48A]'
+                className={`nav-link text-sm font-normal tracking-wide transition-colors duration-300 ${
+                  isDark
+                    ? 'text-[#F6F1E3]/85 hover:text-[#E8D48A]'
                     : 'text-navy/80 hover:text-gold-deep'
                 }`}
               >
@@ -122,8 +118,8 @@ export default function Navbar() {
               <a
                 href={personalInfo.resumePath}
                 download="Tyrone_John_Zapata_Resume.pdf"
-                className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-normal uppercase tracking-wider rounded-lg border-2 transition-all duration-200 ${
-                  isDarkTheme
+                className={`header-resume-btn inline-flex items-center gap-2 px-4 py-2 text-xs font-normal uppercase tracking-wider rounded-lg border-2 transition-all duration-200 ${
+                  isDark
                     ? 'border-[#E8D48A] text-[#E8D48A] hover:bg-[#E8D48A] hover:text-[#0B1F3A]'
                     : 'border-navy text-navy hover:bg-navy hover:text-white'
                 }`}
@@ -132,6 +128,10 @@ export default function Navbar() {
                 <span>Resume</span>
               </a>
             )}
+
+            {/* Theme Toggle Button next to 'Get in Touch' */}
+            <ThemeToggle />
+
             <a
               href="#contact"
               className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-normal uppercase tracking-wider rounded-lg bg-gradient-to-r from-[#E8D48A] via-[#C9A227] to-[#9A7B1C] text-[#0B1F3A] hover:brightness-105 transition-all duration-200 shadow-sm hover:shadow-gold-glow"
@@ -141,14 +141,16 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center space-x-3">
+          {/* Mobile Actions: Theme Toggle + CV + Menu Button */}
+          <div className="flex md:hidden items-center space-x-2.5">
+            <ThemeToggle className="scale-90" />
+
             {personalInfo.hasResume && (
               <a
                 href={personalInfo.resumePath}
                 download="Tyrone_John_Zapata_Resume.pdf"
                 className={`p-2 rounded-lg border-2 text-xs flex items-center gap-1.5 transition-colors duration-300 ${
-                  isDarkTheme
+                  isDark
                     ? 'text-[#E8D48A] border-[#E8D48A] hover:bg-[#E8D48A] hover:text-[#0B1F3A]'
                     : 'text-navy border-navy hover:bg-navy hover:text-white'
                 }`}
@@ -160,9 +162,9 @@ export default function Navbar() {
             )}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className={`p-2 rounded-lg border focus:outline-none shadow-sm transition-colors duration-300 ${
-                isDarkTheme
-                  ? 'bg-[#12294A] border-[#C9A227]/30 text-[#FBF8F1] hover:text-[#E8D48A]'
+              className={`header-mobile-btn p-2 rounded-lg border focus:outline-none shadow-sm transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center ${
+                isDark
+                  ? 'bg-[#12294A] border-[#C9A227]/30 text-[#F6F1E3] hover:text-[#E8D48A]'
                   : 'bg-white border-[#C9A227]/40 text-navy hover:text-gold'
               }`}
               aria-label="Toggle navigation menu"
@@ -182,8 +184,8 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
             className={`md:hidden border-b px-6 py-6 shadow-xl transition-colors duration-300 ${
-              isDarkTheme
-                ? 'bg-[#0B1F3A] border-[#C9A227]/25 text-[#FBF8F1]'
+              isDark
+                ? 'bg-[#0B1F3A] border-[#C9A227]/25 text-[#F6F1E3]'
                 : 'bg-[#FBF8F1] border-[#C9A227]/30 text-navy'
             }`}
           >
@@ -194,22 +196,31 @@ export default function Navbar() {
                   href={item.href}
                   onClick={() => setIsOpen(false)}
                   className={`text-base font-normal transition-colors duration-300 py-1 ${
-                    isDarkTheme
-                      ? 'text-[#FBF8F1]/85 hover:text-[#E8D48A]'
+                    isDark
+                      ? 'text-[#F6F1E3]/85 hover:text-[#E8D48A]'
                       : 'text-navy hover:text-gold-deep'
                   }`}
                 >
                   {item.label}
                 </a>
               ))}
-              <div className="pt-4 border-t border-[#C9A227]/20 flex flex-col gap-3">
+
+              {/* Theme toggle in mobile menu */}
+              <div className="pt-3 pb-1 border-t border-[#C9A227]/20 flex items-center justify-between">
+                <span className={`text-xs uppercase tracking-wider font-normal ${isDark ? 'text-[#F6F1E3]/70' : 'text-navy/70'}`}>
+                  Theme Mode
+                </span>
+                <ThemeToggle />
+              </div>
+
+              <div className="pt-2 border-t border-[#C9A227]/20 flex flex-col gap-3">
                 {personalInfo.hasResume && (
                   <a
                     href={personalInfo.resumePath}
                     download="Tyrone_John_Zapata_Resume.pdf"
                     onClick={() => setIsOpen(false)}
                     className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-normal uppercase tracking-wider rounded-lg border-2 transition-all ${
-                      isDarkTheme
+                      isDark
                         ? 'border-[#E8D48A] text-[#E8D48A] hover:bg-[#E8D48A] hover:text-[#0B1F3A]'
                         : 'border-navy text-navy hover:bg-navy hover:text-white'
                     }`}

@@ -60,22 +60,22 @@ export default function Certificates() {
   };
 
   return (
-    <section id="certificates" className="relative py-28 px-4 sm:px-6 lg:px-8 border-t border-[#C9A227]/25 bg-transparent">
+    <section id="certificates" className="relative py-28 px-4 sm:px-6 lg:px-8 border-t border-[#C9A227]/25 dark:border-[var(--border)] bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col items-start mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-white/90 border border-gold/40 text-[#8A6D12] text-xs font-normal uppercase tracking-[0.2em] mb-3 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-md bg-white/90 border border-gold/40 text-[#8A6D12] dark:bg-[#112A4D] dark:border-[var(--border)] dark:text-[#E8D48A] text-xs font-normal uppercase tracking-[0.2em] mb-3 shadow-sm">
             <span>04 // Certifications</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-navy tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[var(--heading)] tracking-tight">
             Certificates & Accomplishments
           </h2>
-          <p className="text-navy/80 text-sm sm:text-base max-w-2xl mt-3 font-normal">
+          <p className="text-navy/80 dark:text-[var(--text-muted)] text-sm sm:text-base max-w-2xl mt-3 font-normal">
             Verified course completions and technical statements of accomplishment.
           </p>
         </div>
 
-        {/* Certificates Grid: 1 col (<768px), 2 cols (768-1279px), 3 cols (>=1280px) */}
+        {/* Certificates Grid: Stays light paper look in both themes with darker drop shadow in dark mode */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -90,7 +90,6 @@ export default function Certificates() {
             const hasType = isRealText(cert.type);
             const hasIssuer = isRealText(cert.issuer);
 
-            // Construct "type · issuer" string if values exist
             const typeIssuer = [hasType ? cert.type : null, hasIssuer ? cert.issuer : null]
               .filter(Boolean)
               .join(' · ');
@@ -99,7 +98,7 @@ export default function Certificates() {
               <motion.div
                 key={cert.id || cert.title}
                 variants={itemVariants}
-                className="rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold flex flex-col overflow-hidden group h-full justify-between transition-all duration-300"
+                className="rounded-2xl bg-white/75 backdrop-blur-sm border border-[#C9A227]/30 shadow-card hover:shadow-card-hover hover:border-gold dark:shadow-[0_16px_36px_rgba(0,0,0,0.40)] flex flex-col overflow-hidden group h-full justify-between transition-all duration-300"
               >
                 <div>
                   {/* Metallic Gold Top Accent Stripe */}
@@ -118,18 +117,18 @@ export default function Certificates() {
                   <div className="p-6 space-y-3">
                     {/* Type · Issuer Line */}
                     {typeIssuer && (
-                      <div className="flex items-center gap-1.5 text-xs font-normal text-[#8A6D12]">
+                      <div className="flex items-center gap-1.5 text-xs font-normal text-[#8A6D12] dark:text-[#E8D48A]">
                         <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0 text-gold" />
                         <span className="truncate">{typeIssuer}</span>
                       </div>
                     )}
 
                     {/* Certificate Title */}
-                    <h3 className="text-lg font-normal text-navy group-hover:text-gold-deep transition-colors leading-snug">
+                    <h3 className="text-lg font-normal text-navy dark:text-[var(--heading)] group-hover:text-gold-deep transition-colors leading-snug">
                       {cert.title}
                     </h3>
 
-                    {/* Date (Only shown when not empty and not bracketed) */}
+                    {/* Date */}
                     {hasDate && (
                       <div className="flex items-center gap-1.5 text-xs text-navy/70 font-normal pt-1">
                         <Calendar className="w-3.5 h-3.5 text-navy/50" />
@@ -159,7 +158,7 @@ export default function Certificates() {
                         href={cert.pdf}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-normal uppercase tracking-wider rounded-lg border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-normal uppercase tracking-wider rounded-lg border-2 border-navy text-navy hover:bg-navy hover:text-white transition-all dark:border-[var(--border)] dark:text-[var(--heading)]"
                       >
                         <FileText className="w-3.5 h-3.5" />
                         <span>View PDF</span>
@@ -175,4 +174,3 @@ export default function Certificates() {
     </section>
   );
 }
-
